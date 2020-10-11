@@ -4,9 +4,9 @@ var array = str.split("");
 var memory = [0];
 var pointer = 0;
 var result = [];
-var open = [];
+var i = 0;
 
-for(var i = 0; i < array.length; i++){
+while(i < array.length){
 
   if(array[i] == ">"){
   	pointer++;
@@ -18,7 +18,7 @@ for(var i = 0; i < array.length; i++){
   	if(pointer > 0){
   	  pointer--;
   	}else{
-  	  throw "Overflow Error at " + i
+  	  throw "Overflow Error at " + i;
   	}
   }else if(array[i] == "+"){
     if(memory[pointer] < 255){
@@ -37,22 +37,37 @@ for(var i = 0; i < array.length; i++){
   }else if(array[i] == ","){
     memory[pointer] = input.shift().charCodeAt(0);
   }else if(array[i] == "["){
-    if(open.length){
-      if(open[open.length-1] != i){
-        open.push(i);
+    if(memory[pointer] == 0){
+      var open = 0;
+      i += 1;
+      while(i < array.length){
+        if(array[i] == "]" && open == 0){
+          break;
+        }else if(array[i] == "["){
+          open += 1; 
+        }else if(array[i] == "]"){
+          open -= 1; 
+        }
+        i += 1;
       }
-    }else{
-      open.push(i);
     }
   }else if(array[i] == "]"){
-    if(open.length){
-      if(memory[pointer]){
-        i = open[open.length - 1];
-      }else{
-        open.pop();
+    if(memory[pointer] > 0){
+      var close = 0;
+      i -= 1;
+      while(i >= 0){
+        if(array[i] == "[" && close == 0){
+          break;
+        }else if(array[i] == "]"){
+          close += 1; 
+        }else if(array[i] == "["){
+          close -= 1;
+        }
+        i -= 1;
       }
     }
   }
+  i+=1;
 }
 return result;
 }
